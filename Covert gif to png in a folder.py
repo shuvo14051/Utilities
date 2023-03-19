@@ -1,3 +1,5 @@
+from PIL import Image
+
 # source folder with gif images
 folder_path = "cancer"
 # png images will be save in this folder
