@@ -1,3 +1,13 @@
+from sklearn.metrics import silhouette_samples, silhouette_score
+from yellowbrick.cluster import KElbowVisualizer
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import seaborn as sns
+import pandas as pd
+import numpy as np
+
+# Compute silhouette_score and plot the clusters
 def cluster_score(X):
     range_n_clusters = [2, 3, 4]
 
@@ -82,7 +92,7 @@ def cluster_score(X):
 
     plt.show()
 
-
+# Visualize the elbow graph
 def elbow(X):
     model = KMeans()
     visualizer = KElbowVisualizer(model, k=(2,7),
