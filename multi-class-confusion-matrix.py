@@ -53,3 +53,36 @@ table.add_row(["PPV", f"{precision:.4f}"])
 table.add_row(["FPR", f"{fpr:.4f}"])
 table.add_row(["SP", f"{sp:.4f}"])
 print(table)
+
+
+# Some other function
+
+# imblearn specificity_score() function
+from imblearn.metrics import specificity_score
+specificity_score(y_test_arg, y_pred_arg, average = 'macro')
+
+# A function for computing FPR and Specificity
+def calculate_fpr_specificity(confusion_matrix):
+    num_classes = confusion_matrix.shape[0]
+    fpr_list = []
+    specificity_list = []
+
+    for i in range(num_classes):
+        tp = confusion_matrix[i, i]
+        fp = np.sum(confusion_matrix[:, i]) - tp
+        tn = np.sum(np.delete(np.delete(confusion_matrix, i, axis=0), i, axis=1))
+        fn = np.sum(confusion_matrix[i, :]) - tp
+
+        fpr = fp / (fp + tn) if (fp + tn) > 0 else 0
+        specificity = tn / (tn + fp) if (tn + fp) > 0 else 0
+
+        fpr_list.append(fpr)
+        specificity_list.append(specificity)
+
+    return fpr_list, specificity_list
+
+fpr_values, specificity_values = calculate_fpr_specificity(confusion_matrix)
+overall_fpr = np.average(fpr_values)
+overall_specificity = np.average(specificity_values)
+
+print(f"\nOverall FPR: {overall_fpr:.4f}, Overall Specificity: {overall_specificity:.4f}")
