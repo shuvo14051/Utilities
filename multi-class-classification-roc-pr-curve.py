@@ -15,6 +15,39 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 
+# When we have array like [0,1,2,3,4,1,2,3]
+# Either use the following function or one hot encode the values and use the regular function from sklearn
+"""
+This is the code for creating one hot encoding formation
+data = y_test.copy()
+data2 = y_pred.copy()
+
+from sklearn.preprocessing import OneHotEncoder
+data = data.reshape(-1, 1)
+data2 = data2.reshape(-1, 1)
+encoder = OneHotEncoder(sparse=False, categories='auto')
+y_test_hot = encoder.fit_transform(data)
+y_pred_hot = encoder.fit_transform(data2)
+"""
+def roc_auc_score_multiclass(actual_class, pred_class, average = "macro"):
+
+  #creating a set of all the unique classes using the actual class list
+  unique_class = set(actual_class)
+  roc_auc_dict = {}
+  for per_class in unique_class:
+    #creating a list of all the classes except the current class 
+    other_class = [x for x in unique_class if x != per_class]
+
+    #marking the current class as 1 and all other classes as 0
+    new_actual_class = [0 if x in other_class else 1 for x in actual_class]
+    new_pred_class = [0 if x in other_class else 1 for x in pred_class]
+
+    #using the sklearn metrics method to calculate the roc_auc_score
+    roc_auc = roc_auc_score(new_actual_class, new_pred_class, average = average)
+    roc_auc_dict[per_class] = roc_auc
+
+  return roc_auc_dict
+
 def pr_curve(model_path):
     model = tf.keras.models.load_model(model_path)
     y_scores = model.predict([X_test, X_non_test])
